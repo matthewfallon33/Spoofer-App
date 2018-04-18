@@ -1,3 +1,3 @@
 Creating readme soon!
-./public/img/profile-male.png
-![Screenshot](public/img/profile-male.png?raw=true "Title")
+
+![Screenshot](public/img/spoofer.png?raw=true "Title")
