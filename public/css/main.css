@@ -1,22 +1,32 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans:400,700i|Open+Sans:400,800i|Ubuntu');
 
 body{
   margin:0;
-  background: #efefef;
-
-
-
-
+  background:#97c6ff;
 }
 
+@keyframes dropIn {
+    100%{
+      top:0;
+      opacity: 1;
+    }
+  }
 
 
 .navbar{
+  box-shadow: 0px 0px 10px -1px black;
   position: fixed;
   top:0;
   width:100%;
   height: 50px;
-  background:darkgrey;
+  background:linear-gradient(to right, #87ff76, #6CEDFA);
+}
+
+.navbar a img{
+  width:50px;
+  margin: 0 47.5%;
+  height:50px;
 }
 
 .navbar h1{
@@ -25,36 +35,38 @@ body{
   font-family:"Raleway";
   text-align: center;
   font-size: 2.8vw;
-  background-image: linear-gradient(to right, green, yellow 50%, red);
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
+  color:#2c82ff;
   }
 
 .main{
-   box-shadow: 0px 0px 15px -3px;
-  background:#efefef;
-position: absolute;
-    margin: auto;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 50%;
-    height: 460px;
+  animation: dropIn 1s ease-in-out 0s 1 forwards;
+  border-top-right-radius: 50px;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  padding: 10px;
+  box-shadow: 0px 0px 15px -3px;
+  background:#87ff76;
+  background:linear-gradient(to right, #87ff76, #6CEDFA);
+  position: absolute;
+  margin: auto;
+  opacity: 0;
+  top:-180%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 42%;
+  height: 460px;
 }
 
 .main h1{
-  font-size: 4.5vw;
+  font-size: 4.4vw;
   text-align: center;
-  font-family: "Raleway";
+  font-family: "Josefin Sans";
   padding:0;
-  background-image: linear-gradient(to right, lightgreen, darkred);
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
   width:50%;
-  margin: 0 25%;
+  opacity: 0.6;
+  margin: 30px 25%;
 }
 
 .main ul{
@@ -83,7 +95,9 @@ label.container{
   text-align: center;
   margin:10px auto;
   font-family: "Raleway";
-  background: #d4d4d4;
+  background: none;
+  border:4px solid white;
+  border-radius:15px;
 
   box-shadow:0px 0px 10px -3px black;
 }
@@ -104,10 +118,6 @@ label.container{
 
 @media only screen and (max-width: 780px) {
 
-  /* .main ul li{
-    height:22px;
-    font-size: 1.8vw;
-  } */
 }
 
 @media only screen and (max-width: 660px) {
@@ -133,10 +143,6 @@ label.container{
     width:50%;
     margin: 1% 25%;
   }
-
-  /* .main ul li{ */
-    /* font-size: 2.4vw; */
-  /* } */
 }
 
 @media only screen and (max-width:450px){
@@ -153,11 +159,6 @@ label.container{
     margin-top: 30px;
   }
 
-  /* .main ul li{
-    font-size:3vw;
-    height:27px;
-    margin: 2% 25%;
-  } */
 }
 
 @media only screen and (max-width:350px){
@@ -174,12 +175,6 @@ label.container{
   .main ul{
     margin-top:30px;
   }
-
-  /* .main ul li{
-    font-size:3vw;
-    height:27px;
-    margin: 2% 25%;
-  } */
 
   .navbar h1{
     margin-top:5%;

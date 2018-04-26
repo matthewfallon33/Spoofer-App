@@ -7,15 +7,11 @@ var app = express();
 
 var User = require("./model/user");
 
-User.find({name:"Matthew Fallon"}, function(err, user){
+User.find({name:"Joe Bloggs"}, function(err, user){
   if(err){
     console.log(err);
   } else{
-    console.log(user);
-    console.log(user[0].name)
-    console.log(user[0].rgbVal);
-    console.log(user[0].questions["q1"]);
-    console.log(user[0]._id);
+    console.log(user[0]);
   }
 })
 
@@ -36,6 +32,24 @@ app.set("view engine", "ejs");
 app.get("/", (req, res) => {
 
   res.render("index");
+
+});
+
+app.get("/register", (req, res) => {
+
+  res.render("register");
+
+});
+
+app.post("/register", (req, res) => {
+
+  console.log(req.body.firstname);
+  console.log(req.body.surname);
+  console.log(req.body.q1);
+  console.log(req.body.q2);
+  console.log(req.body.q3);
+  console.log(req.body.q4);
+  console.log(req.body.q5);
 
 });
 
