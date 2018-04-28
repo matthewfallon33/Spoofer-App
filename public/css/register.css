@@ -84,7 +84,7 @@ label.container{
 .main form h1{
   text-align: center;
   font-family:"Ubuntu";
-  color:#2c82ff;
+  opacity: 0.6;
   margin-top: 15px;
 }
 
