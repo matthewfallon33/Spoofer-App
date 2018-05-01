@@ -14,27 +14,36 @@
       <a href="/"><img src="img/logos/Spoofer-Logo.png" alt=""></a>
     </div>
 
-
   <div class="main">
-
-  <form action="/register" method="POST">
-
-  <h1>Sign-Up!</h1>
-
-  <input type="text" name="firstname" placeholder="Joe">
-  <input type="text" name="surname" placeholder="Bloggs">
-
-  <h1>Questions</h1>
+    <form action="/register" method="POST">
+    <h1>Sign-Up!</h1>
+    <input type="text" name="firstname" placeholder="Joe">
+    <input type="text" name="surname" placeholder="Bloggs">
+    <h1>Questions</h1>
 
   <input type="text" name="q1" placeholder="I like sleeping">
+  <div class="spoofs">
+    <label><input type="radio" name="select" checked /><span>False</span></label>
+    <label><input type="radio" name="select" /><span>True</span></label>
+  </div>
+
   <input type="text" name="q2" placeholder="I love dank memes">
+  <div class="spoofs">
+    <label><input type="radio" name="select" checked /><span>False</span></label>
+    <label><input type="radio" name="select" /><span>True</span></label>
+  </div>
+
   <input type="text" name="q3" placeholder="I love Logan Paul vlogs">
-  <input type="text" name="q4" placeholder="I hate dogs">
-  <input type="text" name="q5" placeholder="I love cats">
+  <div class="spoofs">
+    <label><input type="radio" name="select" checked /><span>False</span></label>
+    <label><input type="radio" name="select" /><span>True</span></label>
+  </div>
 
-  <button type="submit">Register</button>
 
-  </form>
+
+    <button type="submit">Register</button>
+
+    </form>
 
   </div>
   <script src="js/main.js"></script>

@@ -9,6 +9,11 @@
     }
   }
 
+select{
+  width: 15%;
+  margin:0 42.5%;
+}
+
 body{
   margin:0;
   background:#97c6ff;
@@ -113,6 +118,31 @@ label.container{
   border-radius: 20px;
   font-size:22px;
 }
+
+.main form button.spoof{
+  background:blue;
+}
+
+.main form input[type=radio]{
+  display: none;
+}
+
+.main form group{
+  width:80%;
+  margin:0 10%;
+}
+
+.main form .spoofs{
+  margin: 20px 10%;
+  width:80%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+label {display: inline; padding: 5px; position: relative; padding-left: 40px;}
+label input {display: none;}
+label span {border: 1px solid #ccc; width: 30px; font-family: "Ubuntu";height: 15px; position: absolute; overflow: hidden; line-height: 1; text-align: center; border-radius: 0; font-size: 10pt; left: 0; top: 50%; margin-top: -7.5px;}
+input:checked + span {background: #ccf; border-color: #ccf;}
 
 .main form button:hover{
   background-color:#0a4eb1;

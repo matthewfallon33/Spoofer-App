@@ -43,13 +43,16 @@ app.get("/register", (req, res) => {
 
 app.post("/register", (req, res) => {
 
-  console.log(req.body.firstname);
-  console.log(req.body.surname);
-  console.log(req.body.q1);
-  console.log(req.body.q2);
-  console.log(req.body.q3);
-  console.log(req.body.q4);
-  console.log(req.body.q5);
+  console.log(User);
+  User.firstname = req.body.firstname;
+  User.surname = req.body.surname;
+  User.questions.q1 = req.body.q1;
+  User.questions.q2 = req.body.q2;
+  User.questions.q3 = req.body.q3;
+  User.questions.q4 = req.body.q4;
+  User.questions.q5 = req.body.q5;
+
+  User.save(err => console.log(err));
 
 });
 
