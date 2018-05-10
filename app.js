@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+var session = require("express-session");
 var path = require("path");
 var app = express();
 
@@ -24,6 +25,7 @@ mongoose.connect(process.env.DBPATH)
   function logError(err){
     console.log(err);
   }
+app.use(session({secret:process.env.SESS, resave:false, saveUninitialized:false}));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // to support JSON bodies
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -32,7 +34,23 @@ app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
 
-  res.render("index");
+  // res.render("index");
+
+
+User.findById(req.session.obj_id, (err, user) => {
+  if(err){
+    console.log("Couldn't find any with that id");
+  } else if(user){
+    console.log("Found something \n");
+    var output = `<h1>${user.firstname} ${user.surname}</h1>`;
+    console.log(user.colors);
+    // gives undefined
+    res.render("index", {firstname:user.firstname, surname:user.surname, questions:user.questions, colors:user.colors})
+  } else{
+    res.send("Error: Sorry!");
+  }
+});
+
 
 });
 
@@ -55,9 +73,13 @@ app.post("/register", (req, res) => {
   user.color.red = 255;
   user.color.green = 255;
   user.color.blue = 255;
-    user.save(err => {if(err){console.log("Error");}
+    user.save((err, data) => {if(err){console.log("Error");}
     else{
       console.log("Saved to DB!");
+      // console.log(data.id);
+      console.log("Object ID: " + data._id);
+      req.session.obj_id = data._id;
+      console.log("ID FOR POST: " + req.session.obj_id);
       res.redirect("/");
     }});
 // so now that we can save the data, we then need to be able to
