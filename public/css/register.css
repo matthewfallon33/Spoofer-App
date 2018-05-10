@@ -125,9 +125,11 @@ label.container{
   margin-top: 45px;
 }
 
-.main form button.spoof{
-  background:blue;
+.main form button:hover{
+  cursor:pointer;
+
 }
+
 
 .main form input[type=radio]{
   display: none;
@@ -145,10 +147,21 @@ label.container{
   justify-content: space-evenly;
 }
 
-label {display: inline; padding: 5px; position: relative;}
-label input {display: none;}
-label span {background:white; border: 4px solid white; width: 100px; font-family: "Ubuntu"; height: 15px; position: absolute; overflow: hidden; line-height: 1; text-align: center; border-radius: 45px; font-size: 10pt; left: 0; top: 50%; margin-top: -7.5px;}
-input:checked + span {background: #2c82ff; border: 4px solid #2c82ff;}
+label {
+  display: inline; padding: 5px; position: relative;
+}
+label input {
+  display: none;
+}
+label span {
+  background:white; border: 4px solid white; width: 100px; font-family: "Ubuntu"; height: 15px; position: absolute; overflow: hidden; line-height: 1; text-align: center; border-radius: 45px; font-size: 10pt; left: 0; top: 50%; margin-top: -7.5px;
+}
+label span{
+  cursor:pointer;
+}
+input:checked + span {
+  background: #2c82ff; border: 4px solid #2c82ff;
+}
 
 .main form button:hover{
   background-color:#0a4eb1;

@@ -2,15 +2,14 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
+    name:String,
+    surname:String,
     questions: {
     q1:{statement:String, spoof:Boolean},
     q2:{statement:String, spoof:Boolean},
-    q3:{statement:String, spoof:Boolean},
-    q4:{statement:String, spoof:Boolean},
-    q5:{statement:String, spoof:Boolean}
+    q3:{statement:String, spoof:Boolean}
   },
-  name:String,
-  color:{
+    color:{
     red:Number,
     green:Number,
     blue:Number

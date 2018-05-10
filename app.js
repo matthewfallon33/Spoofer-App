@@ -43,25 +43,28 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-
-  // console.log(User);
-  console.log(req.body);
-  strToBoolean(req.body.q1Spoof);
-  strToBoolean(req.body.q2Spoof)
-  strToBoolean(req.body.q3Spoof);
-  console.log(req.body.q3Spoof);
-
-  console.log("User:\n" + User());
-  // User.firstname = req.body.firstname;
-  // User.surname = req.body.surname;
-  // User.questions.q1.statement = req.body.q1;
-  // User.questions.q1.spoof = strToBoolean(req.body.q1Spoof);
-  // User.questions.q2.statement = req.body.q2;
-  // User.questions.q2.spoof = strToBoolean(req.body.q2Spoof);
-  // User.questions.q3.statement = req.body.q3;
-  // User.questions.q3.spoof = strToBoolean(req.body.q3Spoof);
-  //   User.save(err => console.log("Did not save to database: \n" + err));
-
+  let user = new User();
+  user.firstname = req.body.firstname;
+  user.surname = req.body.surname;
+  user.questions.q1.statement = req.body.q1;
+  user.questions.q1.spoof = strToBoolean(req.body.q1Spoof);
+  user.questions.q2.statement = req.body.q2;
+  user.questions.q2.spoof = strToBoolean(req.body.q2Spoof);
+  user.questions.q3.statement = req.body.q3;
+  user.questions.q3.spoof = strToBoolean(req.body.q3Spoof);
+  user.color.red = 255;
+  user.color.green = 255;
+  user.color.blue = 255;
+    user.save(err => {if(err){console.log("Error");}
+    else{
+      console.log("Saved to DB!");
+      res.redirect("/");
+    }});
+// so now that we can save the data, we then need to be able to
+// render the users profile with some session data
+// find a node session lib and use it
+// so this way we can pull data from the db based on id
+// we should set the session id to the mongo object id
 });
 
 function strToBoolean(string){
