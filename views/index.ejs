@@ -15,7 +15,7 @@
   </div>
 
 
-<div class="main">
+<div class="main" style="background:rgb(<%= colors.red %>, <%= colors.green %>, <%= colors.blue %>)">
 
 <!-- <img src="img/profile-male.png" alt="No image found..."> -->
 <h1><%= firstname + " " + surname %></h1>
@@ -24,21 +24,23 @@
 
 <% if(questions){ %>
   <label class="container">
-  <%= questions.q1.statement %><input class="checkbox" type="checkbox">
+  <%= questions.q1.statement %><input class="checkbox" name="q1" type="checkbox">
   </label>
   <label class="container">
-  <%= questions.q2.statement %><input class="checkbox" type="checkbox">
+  <%= questions.q2.statement %><input class="checkbox" name="q2" type="checkbox">
   </label>
   <label class="container">
-  <%= questions.q3.statement %><input class="checkbox" type="checkbox">
+  <%= questions.q3.statement %><input class="checkbox" name="q3" type="checkbox">
   </label>
 <% } else{ %>
   <p>No questions</p>
 <% } %>
 
-<button>Submit Rating!</button>
+<button id="btn">Submit Rating!</button>
 
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
 <script src="js/main.js"></script>
+<script src="js/guess.js"></script>
 </body>
 </html>
