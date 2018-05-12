@@ -8,14 +8,6 @@ var app = express();
 
 var User = require("./model/user");
 
-// User.find({name:"Joe Bloggs"}, function(err, user){
-//   if(err){
-//     console.log(err);
-//   } else{
-//     console.log(user[0]);
-//   }
-// })
-
 mongoose.connect(process.env.DBPATH)
   .then(function(data){
     console.log("DB Connection established...");
@@ -33,28 +25,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-
-  // res.render("index");
-
-
-User.findById(req.session.obj_id, (err, user) => {
-  if(err){
-    console.log("Couldn't find any with that id");
-  } else if(user){
-    var output = `<h1>${user.firstname} ${user.surname}</h1>`;
-    res.render("index", {firstname:user.firstname, surname:user.surname, questions:user.questions, colors:user.color})
-  } else{
-    res.redirect("/register");
-  }
-});
-
-
+  User.findById(req.session.obj_id, (err, user) => {
+    if(err){
+      console.log("Couldn't find any with that id");
+    } else if(user){
+      var output = `<h1>${user.firstname} ${user.surname}</h1>`;
+      res.render("index", {firstname:user.firstname, surname:user.surname, questions:user.questions, colors:user.color})
+    } else{
+      res.redirect("/register");
+    }
+  });
 });
 
 app.get("/register", (req, res) => {
-
   res.render("register");
-
 });
 
 app.post("/register", (req, res) => {
@@ -115,28 +99,33 @@ app.post("/compare", (req, res) => {
       wrongGuess(req);
       i++;
     }
+    let rights = 3 - wrongs;
+    i = 0;
+    while(i < rights){
+      rightGuess(req);
+      i++;
+    }
+  for(var property in users.color){
+    if(typeof users.color[property] === "number"){
+      if(users.color[property] > 255){
+        users.color[property] = 255;
+      }else if(users.color[property] < 0){
+        users.color[property] = 0;
+      }
+    }
+
+  }
   });
   console.log(req.body);
 
 })
 
 let rightGuess = (req) => {
-  User.findById(req.session.obj_id, (err, user) => {
+  User.findByIdAndUpdate(req.session.obj_id, {$inc: {"color.red": -25, "color.green": +25}}, (err, user) => {
     if(err){
       res.send("<h1>Error, Whoops</h1>");
     }else if(user){
-      user.color.red -= 50;
-      user.color.green += 50;
-      // user.save(function(err){
-      //   if(err){
-      //     console.log("Error");
-      //   } else{
-      //     console.log("Saved color update");
-      //   }
-
-      // we cant save so make a user instance and update it
-      // })
-      // make some rule to keep all the rgb values between 0 - 255
+        // make some rule to keep all the rgb values between 0 - 255
     }
     else{
       res.send("<h1>No User Found</h1>");
@@ -144,14 +133,47 @@ let rightGuess = (req) => {
   })
 }
 
+// get 255 get the amount then minus 255 from the amount increment it by the result of the difference then increment by it
+
 let wrongGuess = (req) => {
   User.findById(req.session.obj_id, (err, user) => {
     if(err){
+      res.send("<h1>Error!</h1>");
+    } else if(user){
+      for(var prop in user.color){
+        if(typeof user.color[prop] === "number"){
+          if(user.color[prop] > 255){
+            console.log(user.color[prop] + " is more than 255");
+            var decAmount = user.color[prop] - 255;
+            var targProp = "color" + prop;
+            User.findByIdAndUpdate(req.session.obj_id, {$inc: {targProp: -decAmount}}, (err, data) => {
+              if (err) {console.log(err);}
+              else {
+                console.log(data);
+              }
+            });
+
+          }else if(user.color[prop] < 0){
+            console.log(user.color[prop] + " is less than 0");
+            var incAmount = user.color[prop];
+            var targProp = "color" + prop;
+            User.findByIdAndUpdate(req.session.obj_id, {$inc: {targProp: incAmount}}, (err, data) => {
+              if(err){
+              // console.log(err);
+              console.log("Something went wrong!");}
+              else{console.log(data);}
+            });
+
+          }
+        }
+      }
+    }
+  })
+  User.findByIdAndUpdate(req.session.obj_id, {$inc: {"color.red": 25, "color.green": -25}}, (err, user) => {
+    if(err){
       res.send("<h1>Error, Whoops</h1>");
     }else if(user){
-      user.color.red += 50;
-      user.color.green -= 50;
-      // make some rule to keep all the rgb values between 0 - 255
+        // make some rule to keep all the rgb values between 0 - 255
     }
     else{
       res.send("<h1>No User Found</h1>");
