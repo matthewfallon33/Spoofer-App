@@ -58,9 +58,7 @@ app.post("/register", (req, res) => {
     else{
       console.log("Saved to DB!");
       // console.log(data.id);
-      console.log("Object ID: " + data._id);
       req.session.obj_id = data._id;
-      console.log("ID FOR POST: " + req.session.obj_id);
       res.redirect("/");
     }});
 
@@ -77,14 +75,12 @@ app.post("/compare", (req, res) => {
       res.send("<h1>No Users!</h1> <br> <a href='/register'>Register</a>")
     }
     else {
-      console.log("Req data");
-
       for(var prop in req.body){
         for(var pro in users.questions){
           if(users.questions.hasOwnProperty(prop)){
-            console.log("DB:" + users.questions[prop].spoof + "\t");
+            // console.log("DB:" + users.questions[prop].spoof + "\t");
           }
-          console.log("REQUEST:" + req.body[prop] + "\t");
+          // console.log("REQUEST:" + req.body[prop] + "\t");
           if(req.body[prop] !== users.questions[prop].spoof){
             wrongs++;
           }
@@ -92,43 +88,41 @@ app.post("/compare", (req, res) => {
         }
       }
     }
-    console.log("Wrongs: " + wrongs);
+    // console.log("Wrongs: " + wrongs);
     let i = 0;
     while(i < wrongs){
-      console.log("Loopin in while");
       wrongGuess(req);
       i++;
     }
     let rights = 3 - wrongs;
     i = 0;
     while(i < rights){
+      console.log("RIGHTS:" + rights + " I:" + i);
       rightGuess(req);
       i++;
     }
-  for(var property in users.color){
-    if(typeof users.color[property] === "number"){
-      if(users.color[property] > 255){
-        users.color[property] = 255;
-      }else if(users.color[property] < 0){
-        users.color[property] = 0;
-      }
-    }
-
-  }
   });
-  console.log(req.body);
-
-})
+});
 
 let rightGuess = (req) => {
-  User.findByIdAndUpdate(req.session.obj_id, {$inc: {"color.red": -25, "color.green": +25}}, (err, user) => {
+    User.findByIdAndUpdate(req.session.obj_id, {$inc: {"color.red": -25, "color.green": +25}}, (err, user) => {
     if(err){
-      res.send("<h1>Error, Whoops</h1>");
+      console.log("err");
     }else if(user){
-        // make some rule to keep all the rgb values between 0 - 255
+    for(var prop in user.color){
+      if(typeof user.color[prop] === "number"){
+        if(user.color[prop] > 255){
+          console.log(prop + ": Is more than 255");
+        } else if(user.color[prop] < 0){
+          console.log(prop + ": Is less than 0");
+        } else{
+          console.log(prop + " :Is within 0 - 255");
+        }
+      }
+    }
     }
     else{
-      res.send("<h1>No User Found</h1>");
+      res.redirect("/register");
     }
   })
 }
@@ -136,47 +130,24 @@ let rightGuess = (req) => {
 // get 255 get the amount then minus 255 from the amount increment it by the result of the difference then increment by it
 
 let wrongGuess = (req) => {
-  User.findById(req.session.obj_id, (err, user) => {
+  User.findByIdAndUpdate(req.session.obj_id, {$inc: {"color.red": 25, "color.green": -25}}, (err, user) => {
     if(err){
-      res.send("<h1>Error!</h1>");
-    } else if(user){
-      for(var prop in user.color){
-        if(typeof user.color[prop] === "number"){
-          if(user.color[prop] > 255){
-            console.log(user.color[prop] + " is more than 255");
-            var decAmount = user.color[prop] - 255;
-            var targProp = "color" + prop;
-            User.findByIdAndUpdate(req.session.obj_id, {$inc: {targProp: -decAmount}}, (err, data) => {
-              if (err) {console.log(err);}
-              else {
-                console.log(data);
-              }
-            });
-
-          }else if(user.color[prop] < 0){
-            console.log(user.color[prop] + " is less than 0");
-            var incAmount = user.color[prop];
-            var targProp = "color" + prop;
-            User.findByIdAndUpdate(req.session.obj_id, {$inc: {targProp: incAmount}}, (err, data) => {
-              if(err){
-              // console.log(err);
-              console.log("Something went wrong!");}
-              else{console.log(data);}
-            });
-
-          }
+      console.log("err");
+    }else if(user){
+    for(var prop in user.color){
+      if(typeof user.color[prop] === "number"){
+        if(user.color[prop] > 255){
+          console.log(prop + ": Is more than 255");
+        } else if(user.color[prop] < 0){
+          console.log(prop + ": Is less than 0");
+        } else{
+          console.log("All values are within 0 - 255");
         }
       }
     }
-  })
-  User.findByIdAndUpdate(req.session.obj_id, {$inc: {"color.red": 25, "color.green": -25}}, (err, user) => {
-    if(err){
-      res.send("<h1>Error, Whoops</h1>");
-    }else if(user){
-        // make some rule to keep all the rgb values between 0 - 255
     }
     else{
-      res.send("<h1>No User Found</h1>");
+      res.redirect("/register");
     }
   })
 }
