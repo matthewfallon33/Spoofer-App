@@ -1,10 +1,17 @@
 require("dotenv").config();
-const express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var session = require("express-session");
 var path = require("path");
-var app = express();
+var http = require('http');
+var express = require('express'),
+    app = module.exports.app = express();
+let sess_id;
+// work with the socket transfers front and back
+
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);  //pass a http.Server instance
+server.listen(process.env.PORT);  //listen on port 80
 
 var User = require("./model/user");
 
@@ -24,17 +31,75 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
 
+ io.sockets.on("connection", (socket) => {
+    socket.on("comparison", (data) => {
+      let wrongs = 0;
+      console.log(data);  
+      if(sess_id){
+        console.log("SESS: " + sess_id);
+        // now we can pull the data from the db
+        User.findById(sess_id, (err, users) => {
+          if(err){
+            console.log(err);
+          }
+          if(users){
+            console.log(users);
+            for(var prop in data){
+              for(var pro in users.questions){
+                if(data[prop] !== users.questions[prop].spoof){
+                wrongs++;
+            }
+          break;
+        }
+      }
+        let rights = 3 - wrongs;
+        console.log("w: " + wrongs);
+        console.log("R: " + rights)
+        //  1: Get the right and wronguess func working
+        //  2: Emit the new data and change the color with it
+        let i = 0;
+        while(i < rights){
+          rightGuess()
+          i++;
+        }
+        i = 0;
+        while(i < wrongs){
+          i++;
+          wrongGuess();
+        }
+          }
+          else{
+            console.log("No users with this id!");
+          }
+        })
+      }
+      else{
+        console.log("No sess id!")
+      }
+    })
+
+    socket.on("disconnect", () => {
+      console.log("User disconnected!");
+    })
+
+  })
+
 app.get("/", (req, res) => {
+   // pulls up the profile
+   if(req.session.id){
+      sess_id = req.session.obj_id;
+   }
   User.findById(req.session.obj_id, (err, user) => {
     if(err){
       console.log("Couldn't find any with that id");
     } else if(user){
-      var output = `<h1>${user.firstname} ${user.surname}</h1>`;
       res.render("index", {firstname:user.firstname, surname:user.surname, questions:user.questions, colors:user.color})
     } else{
       res.redirect("/register");
     }
   });
+
+  
 });
 
 app.get("/register", (req, res) => {
@@ -54,7 +119,10 @@ app.post("/register", (req, res) => {
   user.color.red = 0;
   user.color.green = 255;
   user.color.blue = 0;
-    user.save((err, data) => {if(err){console.log("Error");}
+    user.save((err, data) => {
+    if(err){
+      console.log("Error");
+    }
     else{
       console.log("Saved to DB!");
       // console.log(data.id);
@@ -64,90 +132,34 @@ app.post("/register", (req, res) => {
 
 });
 
-app.post("/compare", (req, res) => {
-  let wrongs = 0;
-  User.findById(req.session.obj_id, (err, users) => {
-
-    if(err){
-      res.send("<h1>Sorry Error!</h1>");
-    }
-    else if(!users){
-      res.send("<h1>No Users!</h1> <br> <a href='/register'>Register</a>")
-    }
-    else {
-      for(var prop in req.body){
-        for(var pro in users.questions){
-          if(users.questions.hasOwnProperty(prop)){
-            // console.log("DB:" + users.questions[prop].spoof + "\t");
-          }
-          // console.log("REQUEST:" + req.body[prop] + "\t");
-          if(req.body[prop] !== users.questions[prop].spoof){
-            wrongs++;
-          }
-          break;
-        }
-      }
-    }
-    // console.log("Wrongs: " + wrongs);
-    let i = 0;
-    while(i < wrongs){
-      wrongGuess(req);
-      i++;
-    }
-    let rights = 3 - wrongs;
-    i = 0;
-    while(i < rights){
-      console.log("RIGHTS:" + rights + " I:" + i);
-      rightGuess(req);
-      i++;
-    }
-  });
-});
-
-let rightGuess = (req) => {
-    User.findByIdAndUpdate(req.session.obj_id, {$inc: {"color.red": -25, "color.green": +25}}, (err, user) => {
+let rightGuess = () => {
+  console.log("Right guess firing")
+    User.findByIdAndUpdate(sess_id, {$inc: {"color.red": -25, "color.green": +25}}, (err, user) => {
     if(err){
       console.log("err");
     }else if(user){
-    for(var prop in user.color){
-      if(typeof user.color[prop] === "number"){
-        if(user.color[prop] > 255){
-          console.log(prop + ": Is more than 255");
-        } else if(user.color[prop] < 0){
-          console.log(prop + ": Is less than 0");
-        } else{
-          console.log(prop + " :Is within 0 - 255");
-        }
-      }
-    }
+      console.log(user.color);
     }
     else{
-      res.redirect("/register");
+      console.log("Error in rightGuess");
+      // handle properly
     }
   })
 }
 
 // get 255 get the amount then minus 255 from the amount increment it by the result of the difference then increment by it
 
-let wrongGuess = (req) => {
-  User.findByIdAndUpdate(req.session.obj_id, {$inc: {"color.red": 25, "color.green": -25}}, (err, user) => {
+let wrongGuess = () => {
+  console.log("Wrong guess firing")
+  User.findByIdAndUpdate(sess_id, {$inc: {"color.red": 25, "color.green": -25}}, (err, user) => {
     if(err){
       console.log("err");
     }else if(user){
-    for(var prop in user.color){
-      if(typeof user.color[prop] === "number"){
-        if(user.color[prop] > 255){
-          console.log(prop + ": Is more than 255");
-        } else if(user.color[prop] < 0){
-          console.log(prop + ": Is less than 0");
-        } else{
-          console.log("All values are within 0 - 255");
-        }
-      }
-    }
+      console.log(user.color)
     }
     else{
-      res.redirect("/register");
+      console.log("Error in wrong guess");
+      // try handle this properly at some point
     }
   })
 }
@@ -158,7 +170,4 @@ function strToBoolean(string){
     case "false": case "no": case "0": case "": return false; default: return true;}
 }
 // ^ put in utils folder/file
-
-app.listen(process.env.PORT, () => {
-  console.log("App Listening on Port: " + process.env.PORT);
-});
+// make routing modular at some point

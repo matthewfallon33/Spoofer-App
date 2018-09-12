@@ -1,0 +1,13 @@
+  
+     // for(var prop in user.color){
+    //   if(typeof user.color[prop] === "number"){
+    //     if(user.color[prop] > 255){
+    //       console.log(prop + ": Is more than 255");
+    //     } else if(user.color[prop] < 0){
+    //       console.log(prop + ": Is less than 0");
+    //     } else{
+    //       console.log(prop + " :Is within 0 - 255");
+    //     }
+    //   }
+    // }
+ 

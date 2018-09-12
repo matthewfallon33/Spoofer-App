@@ -1,5 +1,10 @@
 const btn = document.querySelector("#btn");
 const cboxes = document.querySelectorAll("input[type='checkbox']");
+var socket = io();
+
+window.onbeforeunload = function(e) {
+  socket.disconnect();
+};
 
 btn.addEventListener("click", (e) => {
   console.log("clicked");
@@ -8,9 +13,9 @@ btn.addEventListener("click", (e) => {
     q2: cboxes[1].checked,
     q3: cboxes[2].checked
   }
-    axios.post('/compare', guesses);
-    window.location.reload();
-//   .then(function(response){
-// console.log(response);
-//     });
+    socket.emit("comparison", guesses);
+
 });
+
+
+// all the socket logic should come from here
