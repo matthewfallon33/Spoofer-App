@@ -67,6 +67,18 @@ app.set("view engine", "ejs");
           i++;
           wrongGuess();
         }
+          var query = getColors(sess_id);
+          query.exec((err, users) => {
+            if(err){
+              console.log(err);
+            }else if(users){
+              var colors = users[0].color;
+              socket.emit("newColors", colors);
+            } else{
+              console.log("No users found with sess_id")
+            }
+          });
+          // make sure the colors have been modified correctly (we'll allow outer ranges of 0 - 255 for now)
           }
           else{
             console.log("No users with this id!");
@@ -133,12 +145,11 @@ app.post("/register", (req, res) => {
 });
 
 let rightGuess = () => {
-  console.log("Right guess firing")
-    User.findByIdAndUpdate(sess_id, {$inc: {"color.red": -25, "color.green": +25}}, (err, user) => {
+      User.findByIdAndUpdate(sess_id, {$inc: {"color.red": -25, "color.green": +25}}, (err, user) => {
     if(err){
       console.log("err");
     }else if(user){
-      console.log(user.color);
+      console.log("users right");
     }
     else{
       console.log("Error in rightGuess");
@@ -150,12 +161,11 @@ let rightGuess = () => {
 // get 255 get the amount then minus 255 from the amount increment it by the result of the difference then increment by it
 
 let wrongGuess = () => {
-  console.log("Wrong guess firing")
   User.findByIdAndUpdate(sess_id, {$inc: {"color.red": 25, "color.green": -25}}, (err, user) => {
     if(err){
       console.log("err");
     }else if(user){
-      console.log(user.color)
+      console.log("users wrong")
     }
     else{
       console.log("Error in wrong guess");
@@ -164,6 +174,10 @@ let wrongGuess = () => {
   })
 }
 
+function getColors(id){
+  var query = User.find({"_id": id});
+  return query;
+}
 
 function strToBoolean(string){
    switch(string.toLowerCase().trim()){

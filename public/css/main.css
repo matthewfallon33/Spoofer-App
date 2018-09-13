@@ -64,6 +64,13 @@ button:hover{
 
 .main{
   animation: dropIn 1s ease-in-out 0s 1 forwards;
+  -moz-transition: all 1s ease-in;
+    /* WebKit */
+  -webkit-transition: all 1s ease-in;
+    /* Opera */
+  -o-transition: all 1s ease-in;
+    /* Standard */
+  transition: all 1s ease-in;
   border-top-right-radius: 50px;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
