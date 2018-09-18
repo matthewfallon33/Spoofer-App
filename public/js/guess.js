@@ -23,5 +23,3 @@ socket.on("newColors", function(data) {
 	main.style.background = "rgb(" + data.red + ", " + data.green + ", " + data.blue + ")";
 });
 
-// all the socket logic should come from here
-// just need to set the colors in js

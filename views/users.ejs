@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Users | See Who's Lying</title>
+	<link rel="stylesheet" type="text/css" href="css/users.css">
+	<link rel="shortcut icon" href="img/logos/LOGO.png">
+</head>
+<body>
+
+ <div class="navbar">
+      <a href="/"><img src="img/logos/Spoofer-Logo.png" alt=""></a>
+    </div>
+
+   <div class="welcome">
+   	<h1>See who's spoofing and who's truthing!</h1>
+   </div>
+
+<div class="users">
+<% if(users) { %>
+	<% users.forEach(user => { %>
+	<div class="user"  style="background:rgb(<%= user.color.red %>, <%= user.color.green %>, <%= user.color.blue %>)">
+	<p class="name"><%= user.firstname %> <%= user.surname %></p>
+	<a href="/profile?id=<%= user._id %>">Rate!</a>
+	</div>
+<% }) %>
+<% }%>
+</div>
+</body>
+</html>

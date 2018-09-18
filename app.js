@@ -7,7 +7,6 @@ var http = require('http');
 var express = require('express'),
     app = module.exports.app = express();
 let sess_id;
-// work with the socket transfers front and back
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);  //pass a http.Server instance
@@ -33,11 +32,11 @@ app.set("view engine", "ejs");
 
  io.sockets.on("connection", (socket) => {
     socket.on("comparison", (data) => {
+      // try store this in a function
       let wrongs = 0;
       console.log(data);  
       if(sess_id){
         console.log("SESS: " + sess_id);
-        // now we can pull the data from the db
         User.findById(sess_id, (err, users) => {
           if(err){
             console.log(err);
@@ -112,6 +111,17 @@ app.get("/", (req, res) => {
   });
 
   
+});
+
+app.get("/users", (req, res) => {
+  User.find({}, (err, users) => {
+    if(err){
+      console.log("errororororor");
+    }
+    if(users){
+      res.render("users", { users });
+    }
+  })
 });
 
 app.get("/register", (req, res) => {
